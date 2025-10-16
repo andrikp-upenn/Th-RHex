@@ -1,0 +1,36 @@
+services:
+  ros-jazzy:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.jazzy
+      args:
+        USERNAME: ${USERNAME:-ros}
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    image: thrhex/ros2-jazzy-dev:latest
+
+    # Keep these if you need ROS host networking
+    network_mode: host
+    ipc: host
+
+    # --- GPU access (Compose v2) ---
+    gpus: all
+    environment:
+      - DISPLAY
+      - XDG_RUNTIME_DIR=/tmp
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute
+
+    volumes:
+      - ./:/workspaces:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /dev/dri:/dev/dri
+      # Optional but helps X11 auth on some setups:
+      # - ${XAUTHORITY:-$HOME/.Xauthority}:/home/ros/.Xauthority:ro
+    tty: true
+    stdin_open: true
+    command: ["bash","-lc","while :; do sleep 600; done"]
+    restart: unless-stopped
+
+    profiles: ["jazzy"]
+

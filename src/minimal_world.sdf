@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <world name="minimal">
+    <gravity>0 0 -9.81</gravity>
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <model name="box">
+      <pose>0 0 1 0 0 0</pose>
+      <link name="link">
+        <inertial><mass>1</mass></inertial>
+        <collision name="col">
+          <geometry><box><size>1 1 1</size></box></geometry>
+        </collision>
+        <visual name="vis">
+          <geometry><box><size>1 1 1</size></box></geometry>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

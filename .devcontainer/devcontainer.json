@@ -1,0 +1,36 @@
+{
+  "name": "Th-RHex ROS 2 (Jazzy + Harmonic)",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "ros-jazzy",
+  "workspaceFolder": "/workspaces",
+  "runServices": ["ros-jazzy"],
+  "overrideCommand": false,
+
+  "remoteUser": "ros",
+  "containerUser": "ros",
+
+  "postCreateCommand": "bash -lc 'sudo rosdep init || true; rosdep update || true; echo source /opt/ros/jazzy/setup.bash >> ~/.bashrc || true'",
+
+  "containerEnv": {
+    "ROS_DOMAIN_ID": "42",
+    "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+    "DISPLAY": "unix:0"
+  },
+
+  "mounts": [
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
+    "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached"
+  ],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-iot.vscode-ros",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        "ms-python.python",
+        "eamodio.gitlens"
+      ]
+    }
+  }
+}
