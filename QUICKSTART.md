@@ -38,9 +38,17 @@ docker compose exec ros-jazzy bash
 Once inside the container:
 
 ```bash
+cd /workspaces
 colcon build --symlink-install
 source install/setup.bash
 gz sim -r shapes.sdf
+```
+
+URDF sanity check:
+
+```bash
+ros2 run th_rhex_description validate_urdf.sh
+ros2 launch th_rhex_description display.launch.py
 ```
 
 ---

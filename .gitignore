@@ -1,2 +1,14 @@
 .env
-.env
+
+# ROS 2 / colcon generated output
+build/
+install/
+log/
+src/build/
+src/install/
+src/log/
+
+# Local editor and runtime noise
+.vscode/
+*.pyc
+__pycache__/

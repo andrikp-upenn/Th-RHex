@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       sudo git build-essential cmake python3-pip \
       python3-colcon-common-extensions python3-rosdep python3-vcstool \
       gz-harmonic ros-jazzy-ros-gz \
+      ros-jazzy-joint-state-publisher ros-jazzy-joint-state-publisher-gui \
  && rm -rf /var/lib/apt/lists/*
 
 # --- create user cleanly (ROS official pattern +  args) ---
@@ -43,4 +44,3 @@ RUN rosdep update || true
 # --- defaults for dev workflow ---
 WORKDIR /workspaces
 SHELL ["/bin/bash","-lc"]
-
