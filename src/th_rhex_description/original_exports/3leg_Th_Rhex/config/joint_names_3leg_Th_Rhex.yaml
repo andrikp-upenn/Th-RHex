@@ -1,0 +1,1 @@
+controller_joint_names: ['', 'fr_leg_joint', 'fr_wheel_joint', 'ml_leg_joint', 'ml_wheel_joint', 'rr_leg_joint', 'rr_wheel_joint', ]

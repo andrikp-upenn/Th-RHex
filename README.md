@@ -124,7 +124,7 @@ The workspace root is `/workspaces`.
 Example build and test commands:
 
 ```bash
-cd /workspaces/src
+cd /workspaces
 colcon build --symlink-install
 source install/setup.bash
 ```
@@ -181,6 +181,38 @@ docker compose run --rm ros-jazzy bash
 - **URDF (Unified Robot Description Format)** defines Th-RHex’s mechanical structure: links, joints, and geometry.  
 - **Gazebo Harmonic** loads URDFs to simulate physics, sensors, and control systems.  
 - This setup supports URDF and control development before transitioning to Isaac Sim for high-fidelity simulation and reinforcement learning.
+
+### Importing the Th-RHex URDF
+
+Robot description files live in the `th_rhex_description` ROS package:
+
+```text
+src/th_rhex_description/
+├── urdf/      # URDF/Xacro files
+├── meshes/    # STL/DAE/OBJ meshes referenced by the URDF
+├── launch/    # RViz and Gazebo launch checks
+├── rviz/      # RViz config
+└── worlds/    # Gazebo worlds
+```
+
+Use `src/th_rhex_description/urdf/th_rhex.urdf.xacro` as the main robot model. Put mesh files under `src/th_rhex_description/meshes/` and reference them from URDF with package URLs, for example:
+
+```xml
+<mesh filename="package://th_rhex_description/meshes/base_link.STL"/>
+```
+
+The current imported SolidWorks export is archived at `src/th_rhex_description/original_exports/3leg_Th_Rhex/`. The maintained copy rewrites mesh paths to `package://th_rhex_description/...` so ROS 2 can resolve assets after install.
+
+Validate and view the model from inside the container:
+
+```bash
+cd /workspaces
+colcon build --symlink-install
+source install/setup.bash
+ros2 run th_rhex_description validate_urdf.sh
+ros2 launch th_rhex_description display.launch.py
+ros2 launch th_rhex_description gazebo.launch.py
+```
 
 ---
 
