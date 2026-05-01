@@ -1,5 +1,5 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -22,6 +22,12 @@ def generate_launch_description():
     model = LaunchConfiguration("model")
     world = LaunchConfiguration("world")
 
+    # Robot description from xacro
+    robot_description = ParameterValue(
+        Command(["xacro", " ", model]),
+        value_type=str
+    )
+
     return LaunchDescription(
         [
             DeclareLaunchArgument(
@@ -34,23 +40,22 @@ def generate_launch_description():
                 default_value=default_world,
                 description="Absolute path to a Gazebo SDF world.",
             ),
+
+            # 1. Start Gazebo
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(gz_sim_launch),
                 launch_arguments={"gz_args": ["-r ", world]}.items(),
             ),
+
+            # 2. Robot state publisher - broadcasts TF transforms
             Node(
                 package="robot_state_publisher",
                 executable="robot_state_publisher",
-                parameters=[
-                    {
-                        "robot_description": ParameterValue(
-                            Command(["xacro", " ", model]),
-                            value_type=str,
-                        )
-                    }
-                ],
+                parameters=[{robot_description: robot_description}],
                 output="screen",
             ),
+
+            # 3. Spawn robot into Gazebo
             Node(
                 package="ros_gz_sim",
                 executable="create",
@@ -64,5 +69,32 @@ def generate_launch_description():
                 ],
                 output="screen",
             ),
+
+            # 4. Spawn joint_state_broadcaster after short delay
+            TimerAction(
+                period=3.0, #seconds
+                actions=[
+                    Node(
+                        package="controller_manager",
+                        executable="spawner",
+                        arguments=["joint_state_broadcaster"],
+                        output="screen",
+                    ),
+                ]
+            ),
+
+            # 5. Spawn leg velocity controller after joint_state_broadcaster
+            TimerAction(
+                period=4.0, #seconds
+                actions=[
+                    Node(
+                        package="controller_manager",
+                        executable="spawner",
+                        arguments=["leg_velocity_controller"],
+                        output="screen",
+                    ),
+                ]
+            ),
+
         ]
     )
