@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(th_rhex_description)
+project(th_rhex_description_3leg)
 
 find_package(ament_cmake REQUIRED)
 

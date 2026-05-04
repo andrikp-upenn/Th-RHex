@@ -7,9 +7,9 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    package_name = "th_rhex_description"
+    package_name = "th_rhex_description_3leg"
     default_model = PathJoinSubstitution(
-        [FindPackageShare(package_name), "urdf", "th_rhex.urdf.xacro"]
+        [FindPackageShare(package_name), "urdf", "3leg_Th_Rhex_v2.urdf"]
     )
     default_rviz_config = PathJoinSubstitution(
         [FindPackageShare(package_name), "rviz", "urdf.rviz"]

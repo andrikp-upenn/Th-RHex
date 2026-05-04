@@ -1,0 +1,20 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  #Hz
+    use_sim_time: true
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    leg_velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+
+leg_velocity_controller:
+  ros__parameters:
+    joints:
+      - fr_leg_joint
+      - fl_leg_joint
+      - ml_leg_joint
+      - mr_leg_joint
+      - rr_leg_joint
+      - rl_leg_joint

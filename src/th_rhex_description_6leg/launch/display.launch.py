@@ -1,6 +1,5 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.actions import DeclareLaunchArgument
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
@@ -8,19 +7,16 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    package_name = "th_rhex_description"
+    package_name = "th_rhex_description_6leg"
     default_model = PathJoinSubstitution(
-        [FindPackageShare(package_name), "urdf", "th_rhex.urdf.xacro"]
+        [FindPackageShare(package_name), "urdf", "6leg_Th_Rhex_v1.urdf"]
     )
-    default_world = PathJoinSubstitution(
-        [FindPackageShare(package_name), "worlds", "minimal_world.sdf"]
-    )
-    gz_sim_launch = PathJoinSubstitution(
-        [FindPackageShare("ros_gz_sim"), "launch", "gz_sim.launch.py"]
+    default_rviz_config = PathJoinSubstitution(
+        [FindPackageShare(package_name), "rviz", "urdf.rviz"]
     )
 
     model = LaunchConfiguration("model")
-    world = LaunchConfiguration("world")
+    rviz_config = LaunchConfiguration("rviz_config")
 
     return LaunchDescription(
         [
@@ -30,13 +26,9 @@ def generate_launch_description():
                 description="Absolute path to a URDF or Xacro file.",
             ),
             DeclareLaunchArgument(
-                "world",
-                default_value=default_world,
-                description="Absolute path to a Gazebo SDF world.",
-            ),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(gz_sim_launch),
-                launch_arguments={"gz_args": ["-r ", world]}.items(),
+                "rviz_config",
+                default_value=default_rviz_config,
+                description="Absolute path to an RViz config file.",
             ),
             Node(
                 package="robot_state_publisher",
@@ -52,16 +44,14 @@ def generate_launch_description():
                 output="screen",
             ),
             Node(
-                package="ros_gz_sim",
-                executable="create",
-                arguments=[
-                    "-topic",
-                    "robot_description",
-                    "-name",
-                    "th_rhex",
-                    "-z",
-                    "0.25",
-                ],
+                package="joint_state_publisher_gui",
+                executable="joint_state_publisher_gui",
+                output="screen",
+            ),
+            Node(
+                package="rviz2",
+                executable="rviz2",
+                arguments=["-d", rviz_config],
                 output="screen",
             ),
         ]

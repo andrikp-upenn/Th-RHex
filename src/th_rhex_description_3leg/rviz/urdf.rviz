@@ -25,7 +25,7 @@ Visualization Manager:
       Value: true
   Enabled: true
   Global Options:
-    Fixed Frame: base_footprint
+    Fixed Frame: base_link
   Name: root
   Tools:
     - Class: rviz_default_plugins/Interact
