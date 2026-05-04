@@ -10,5 +10,8 @@ src/log/
 
 # Local editor and runtime noise
 .vscode/
+.codex
+.codex/
+.claude/
 *.pyc
 __pycache__/
