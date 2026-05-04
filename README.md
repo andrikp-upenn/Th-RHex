@@ -145,6 +145,45 @@ gz sim -r shapes.sdf
 
 ---
 
+## Th-RHex Holonomic Demo
+
+The 3-leg holonomic demo runs in Gazebo through the Jacobian velocity
+controller. Full step-by-step instructions are in [`DEMO.md`](DEMO.md).
+
+Inside the container, build and source the workspace:
+
+```bash
+cd /workspaces
+colcon build --symlink-install
+source /workspaces/install/setup.bash
+```
+
+Start Gazebo:
+
+```bash
+ros2 launch th_rhex_description_3leg gazebo.launch.py
+```
+
+In a second container terminal, start the Jacobian controller:
+
+```bash
+cd /workspaces
+source /workspaces/install/setup.bash
+ros2 run th_rhex_control jacobian_controller
+```
+
+In a third container terminal, run the interactive demo:
+
+```bash
+cd /workspaces
+./scripts/demo.sh
+```
+
+The demo includes forward motion, lateral holonomic motion, diagonal motion,
+pure yaw, a full automatic sequence, tele-op velocity mode, and a reset helper.
+
+---
+
 ## Typical Development Workflow
 
 | Step | Description | Command |

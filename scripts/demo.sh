@@ -106,6 +106,125 @@ stop_jvel_watcher() {
     JVEL_PID=""
 }
 
+send_twist_once() {
+    local lx=$1 ly=$2 lz=$3 ax=$4 ay=$5 az=$6
+    ros2 topic pub --once "$TOPIC" "$MSG" \
+        "{linear: {x: $lx, y: $ly, z: $lz}, angular: {x: $ax, y: $ay, z: $az}}" \
+        > /dev/null 2>&1
+}
+
+prompt_number() {
+    local prompt="$1"
+    local default="$2"
+    local value
+
+    printf "  %s [%s]: " "$prompt" "$default" >&2
+    read -r value
+    if [ -z "$value" ]; then
+        value="$default"
+    fi
+
+    case "$value" in
+        ''|*[!0-9.-]*)
+            echo "  ${C_YELLOW}Invalid value; using ${default}.${C_RESET}" >&2
+            value="$default"
+            ;;
+    esac
+
+    printf "%s" "$value"
+}
+
+teleop_mode() {
+    local linear_speed angular_speed
+    local lx="0.0" ly="0.0" az="0.0"
+    local key rest old_stty
+
+    echo ""
+    echo "${C_BLUE}  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}"
+    echo "  ${C_GREEN}TELE-OP VELOCITY MODE${C_RESET}"
+    echo "  WASD commands body-frame translation; arrow left/right command yaw."
+    echo "  Space or x stops. q returns to the main menu."
+    echo "${C_BLUE}  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}"
+    echo ""
+
+    linear_speed=$(prompt_number "Linear speed in m/s" "0.10")
+    echo ""
+    angular_speed=$(prompt_number "Yaw rate in rad/s" "0.30")
+    echo ""
+    echo ""
+    echo "  Controls:"
+    echo "    w/s       forward/backward"
+    echo "    a/d       left/right lateral motion"
+    echo "    ←/→       yaw left/right"
+    echo "    space/x   stop"
+    echo "    q         quit tele-op"
+    echo ""
+
+    start_jvel_watcher
+    old_stty=$(stty -g 2>/dev/null || true)
+    stty -echo -icanon time 0 min 0 2>/dev/null || true
+    trap '[ -n "$old_stty" ] && stty "$old_stty" 2>/dev/null; cleanup; exit 130' INT TERM
+
+    while true; do
+        key=""
+        rest=""
+        IFS= read -rsn1 key
+
+        case "$key" in
+            w|W)
+                lx="$linear_speed"; ly="0.0"; az="0.0"
+                ;;
+            s|S)
+                lx="-$linear_speed"; ly="0.0"; az="0.0"
+                ;;
+            a|A)
+                lx="0.0"; ly="$linear_speed"; az="0.0"
+                ;;
+            d|D)
+                lx="0.0"; ly="-$linear_speed"; az="0.0"
+                ;;
+            x|X|" ")
+                lx="0.0"; ly="0.0"; az="0.0"
+                ;;
+            q|Q)
+                send_twist_once 0.0 0.0 0.0 0.0 0.0 0.0
+                break
+                ;;
+            $'\e')
+                IFS= read -rsn2 rest
+                case "$rest" in
+                    "[D")
+                        lx="0.0"; ly="0.0"; az="$angular_speed"
+                        ;;
+                    "[C")
+                        lx="0.0"; ly="0.0"; az="-$angular_speed"
+                        ;;
+                    *)
+                        continue
+                        ;;
+                esac
+                ;;
+            *)
+                sleep 0.03
+                continue
+                ;;
+        esac
+
+        send_twist_once "$lx" "$ly" 0.0 0.0 0.0 "$az"
+        local jvel
+        jvel=$(cat "$JVEL_FILE" 2>/dev/null || echo "waiting for data...")
+        printf "\r  ${C_YELLOW}cmd vx=%6s  vy=%6s  wz=%6s${C_RESET}  ${C_CYAN}%-42s${C_RESET}" \
+            "$lx" "$ly" "$az" "$jvel"
+    done
+
+    [ -n "$old_stty" ] && stty "$old_stty" 2>/dev/null || true
+    trap cleanup EXIT INT TERM
+    stop_jvel_watcher
+    send_twist_once 0.0 0.0 0.0 0.0 0.0 0.0
+    printf "\r%-120s\r\n" ""
+    echo "  ${C_RED}Tele-op stopped; cmd_vel zeroed.${C_RESET}"
+}
+
 # ── Core motion runner ────────────────────────────────────────
 # Arguments:
 #   $1  title       Display name for this motion
@@ -190,6 +309,7 @@ print_menu() {
     echo "    ${C_GREEN}3${C_RESET}  Diagonal motion              ${C_YELLOW}vx = +0.10  vy = +0.10 m/s${C_RESET}"
     echo "    ${C_GREEN}4${C_RESET}  Yaw in place                 ${C_YELLOW}wz = +0.30 rad/s${C_RESET}"
     echo "    ${C_GREEN}5${C_RESET}  ${C_BOLD}Full auto sequence${C_RESET}           all four motions, 1 s pause between"
+    echo "    ${C_GREEN}t${C_RESET}  Tele-op velocity mode        WASD translation, arrows yaw"
     echo "    ${C_GREEN}r${C_RESET}  Reset robot position"
     echo "    ${C_GREEN}q${C_RESET}  Quit"
     echo ""
@@ -258,11 +378,22 @@ while true; do
             echo ""
             echo "  ${C_GREEN}${C_BOLD}✓ Full sequence complete.${C_RESET}"
             ;;
+        t|T)
+            teleop_mode
+            ;;
         r|R)
             echo ""
             SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
             if [ -x "$SCRIPT_DIR/reset_robot.sh" ]; then
-                bash "$SCRIPT_DIR/reset_robot.sh"
+                echo "  ${C_RED}Reset requested. Running reset helper...${C_RESET}"
+                if timeout 20s bash "$SCRIPT_DIR/reset_robot.sh"; then
+                    echo "  ${C_GREEN}Reset helper finished.${C_RESET}"
+                else
+                    rc=$?
+                    echo ""
+                    echo "  ${C_RED}Reset helper did not complete cleanly (exit ${rc}).${C_RESET}"
+                    echo "  Restart Gazebo and the Jacobian controller before continuing the demo."
+                fi
             else
                 echo "  ${C_RED}Stopping all motion...${C_RESET}"
                 ros2 topic pub --once "$TOPIC" "$MSG" "$ZERO" > /dev/null 2>&1
@@ -278,7 +409,7 @@ while true; do
         "")
             ;;
         *)
-            echo "  ${C_RED}Invalid choice. Enter 1–5, r, or q.${C_RESET}"
+            echo "  ${C_RED}Invalid choice. Enter 1–5, t, r, or q.${C_RESET}"
             ;;
     esac
     echo ""
