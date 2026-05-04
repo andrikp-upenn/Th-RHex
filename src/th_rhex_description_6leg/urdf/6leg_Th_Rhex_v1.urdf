@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="6leg_Th_Rhex_v1">
+
+  <!-- Gazebo ros2_control plugin -->
+  <gazebo>
+    <plugin filename="gz_ros2_control-system"
+      name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find th_rhex_description_6leg)/config/controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+    <joint name="fr_leg_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="ml_leg_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rr_leg_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="fl_leg_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="mr_leg_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rl_leg_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="fr_wheel_joint">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="ml_wheel_joint">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rr_wheel_joint">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="fl_wheel_joint">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="mr_wheel_joint">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rl_wheel_joint">
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.00601815121807348 1.11022302462516E-16 -0.0162499999999999"
+        rpy="0 0 0" />
+      <mass
+        value="1.11361116597105" />
+      <inertia
+        ixx="0.00190475930166411"
+        ixy="-7.62121520007019E-20"
+        ixz="3.80503081774393E-20"
+        iyy="0.00594807790655958"
+        iyz="3.55309145549498E-20"
+        izz="0.00765557734126471" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="fr_leg_link">
+    <inertial>
+      <origin
+        xyz="-2.90589249358764E-05 0.019825968537687 -0.000906376246166185"
+        rpy="0 0 0" />
+      <mass
+        value="0.0143240000189294" />
+      <inertia
+        ixx="2.03917193044182E-06"
+        ixy="7.53039525084926E-09"
+        ixz="-2.25273591102523E-07"
+        iyy="1.65781524655113E-06"
+        iyz="7.8843892052622E-09"
+        izz="1.1520825004559E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/fr_leg_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/fr_leg_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="fr_leg_joint"
+    type="continuous">
+    <origin
+      xyz="0.102780027506839 -0.0812499972928725 -0.0161739485972958"
+      rpy="-1.5707963267949 0 -3.14159265358979" />
+    <parent
+      link="base_link" />
+    <child
+      link="fr_leg_link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="fr_wheel_link">
+    <inertial>
+      <origin
+        xyz="0 1.11022302462516E-16 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.0183333766342719" />
+      <inertia
+        ixx="2.15679472127558E-06"
+        ixy="-2.94834684407775E-22"
+        ixz="-3.59989002583078E-21"
+        iyy="2.15679472127558E-06"
+        iyz="2.68887220800149E-22"
+        izz="3.64546367180552E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/fr_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/fr_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="fr_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0 0.0610760514027042 0"
+      rpy="0 -0.785398163397443 3.14159265358979" />
+    <parent
+      link="fr_leg_link" />
+    <child
+      link="fr_wheel_link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="ml_leg_link">
+    <inertial>
+      <origin
+        xyz="4.11491576326473E-05 0.019825968537687 -0.000877293217729336"
+        rpy="0 0 0" />
+      <mass
+        value="0.0143240000189294" />
+      <inertia
+        ixx="1.81390726065644E-06"
+        ixy="-1.06492598371532E-08"
+        ixz="-5.78582764024795E-13"
+        iyy="1.65781524655112E-06"
+        iyz="3.50937001048748E-10"
+        izz="1.37734717024126E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/ml_leg_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/ml_leg_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ml_leg_joint"
+    type="continuous">
+    <origin
+      xyz="0 0.120249997292873 -0.0161739485972948"
+      rpy="-1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="ml_leg_link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="ml_wheel_link">
+    <inertial>
+      <origin
+        xyz="0 -1.11022302462516E-16 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.0183333766342719" />
+      <inertia
+        ixx="2.15679472127558E-06"
+        ixy="1.03751995996626E-22"
+        ixz="2.21318742949462E-22"
+        iyy="2.15679472127557E-06"
+        iyz="2.95155971228111E-23"
+        izz="3.6454636718055E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/ml_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/ml_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ml_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0 0.0610760514027041 0"
+      rpy="0 -1.5707963267949 0" />
+    <parent
+      link="ml_leg_link" />
+    <child
+      link="ml_wheel_link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="rr_leg_link">
+    <inertial>
+      <origin
+        xyz="-2.90589282385678E-05 0.0198259685376868 -0.000848219263724026"
+        rpy="0 0 0" />
+      <mass
+        value="0.0143240000189293" />
+      <inertia
+        ixx="2.03917191717553E-06"
+        ixy="7.53039618961269E-09"
+        ixz="2.25264156356087E-07"
+        iyy="1.65781524655111E-06"
+        iyz="-7.17993132929502E-09"
+        izz="1.15208251372215E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/rr_leg_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/rr_leg_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rr_leg_joint"
+    type="continuous">
+    <origin
+      xyz="-0.102779972493161 -0.0812499972928725 -0.0161739485972958"
+      rpy="-1.5707963267949 0 3.14159265358979" />
+    <parent
+      link="base_link" />
+    <child
+      link="rr_leg_link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="rr_wheel_link">
+    <inertial>
+      <origin
+        xyz="0 -1.11022302462516E-16 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.018333376634272" />
+      <inertia
+        ixx="2.15679472127559E-06"
+        ixy="2.28806961472331E-23"
+        ixz="1.79994501291539E-21"
+        iyy="2.15679472127559E-06"
+        iyz="3.2028710918347E-23"
+        izz="3.64546367180552E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/rr_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/rr_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rr_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0 0.0610760514027039 0"
+      rpy="0 0.785398163397454 -3.14159265358979" />
+    <parent
+      link="rr_leg_link" />
+    <child
+      link="rr_wheel_link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="fl_leg_link">
+    <inertial>
+      <origin
+        xyz="-2.90589282383458E-05 0.019825968537687 -0.000848219263723471"
+        rpy="0 0 0" />
+      <mass
+        value="0.0143240000189289" />
+      <inertia
+        ixx="2.03917191717547E-06"
+        ixy="7.5303961896461E-09"
+        ixz="2.25264156607771E-07"
+        iyy="1.6578152465511E-06"
+        iyz="-7.17993132920371E-09"
+        izz="1.15208251372216E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/fl_leg_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/fl_leg_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="fl_leg_joint"
+    type="continuous">
+    <origin
+      xyz="0.102779972493162 0.0812499972928724 -0.0161739485972962"
+      rpy="-1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="fl_leg_link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="fl_wheel_link">
+    <inertial>
+      <origin
+        xyz="6.66133814775094E-16 2.22044604925031E-16 2.22044604925031E-16"
+        rpy="0 0 0" />
+      <mass
+        value="0.0183333766342723" />
+      <inertia
+        ixx="2.15679472127563E-06"
+        ixy="-1.12201661764092E-22"
+        ixz="9.84675801183124E-21"
+        iyy="2.15679472127563E-06"
+        iyz="-4.32103593288237E-22"
+        izz="3.64546367180559E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/fl_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/fl_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="fl_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0 0.0610760514027043 0"
+      rpy="0 0.78539816339745 -3.14159265358979" />
+    <parent
+      link="fl_leg_link" />
+    <child
+      link="fl_wheel_link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="mr_leg_link">
+    <inertial>
+      <origin
+        xyz="-4.1103632924866E-05 0.0198259685376866 -0.000877297752315376"
+        rpy="0 0 0" />
+      <mass
+        value="0.0143240000189294" />
+      <inertia
+        ixx="1.81390726063329E-06"
+        ixy="1.06503198792167E-08"
+        ixz="4.57638356867679E-14"
+        iyy="1.65781524655113E-06"
+        iyz="3.52230824824356E-10"
+        izz="1.37734717026442E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/mr_leg_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/mr_leg_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="mr_leg_joint"
+    type="continuous">
+    <origin
+      xyz="0 -0.120249997292872 -0.0161739485972958"
+      rpy="-1.5707963267949 0 3.14159265358979" />
+    <parent
+      link="base_link" />
+    <child
+      link="mr_leg_link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="mr_wheel_link">
+    <inertial>
+      <origin
+        xyz="0 1.11022302462516E-16 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.0183333766342719" />
+      <inertia
+        ixx="2.15679472127557E-06"
+        ixy="-1.06054813507599E-22"
+        ixz="-5.22376966148089E-23"
+        iyy="2.15679472127557E-06"
+        iyz="-1.68627196785177E-22"
+        izz="3.6454636718055E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/mr_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/mr_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="mr_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0 0.0610760514027042 0"
+      rpy="0 -1.5707963267949 0" />
+    <parent
+      link="mr_leg_link" />
+    <child
+      link="mr_wheel_link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="rl_leg_link">
+    <inertial>
+      <origin
+        xyz="2.90981032700088E-05 0.0198259685376874 -0.000848219337741041"
+        rpy="0 0 0" />
+      <mass
+        value="0.0143240000189293" />
+      <inertia
+        ixx="2.03917508249944E-06"
+        ixy="-7.53394213956505E-09"
+        ixz="-2.25400231668662E-07"
+        iyy="1.65781524655113E-06"
+        iyz="-7.17998501785535E-09"
+        izz="1.15207934839828E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/rl_leg_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/rl_leg_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rl_leg_joint"
+    type="continuous">
+    <origin
+      xyz="-0.102780027506839 0.0812499972928725 -0.0161739485972956"
+      rpy="-1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="rl_leg_link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="rl_wheel_link">
+    <inertial>
+      <origin
+        xyz="0 -1.11022302462516E-16 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.0183333766342719" />
+      <inertia
+        ixx="2.15679472127558E-06"
+        ixy="8.22192105076885E-23"
+        ixz="-8.470329472543E-22"
+        iyy="2.15679472127558E-06"
+        iyz="-1.72561549359988E-22"
+        izz="3.64546367180552E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/rl_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://th_rhex_description_6leg/meshes/rl_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rl_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="-0.000176749188457226 0.0610760514027044 -0.00017677398816951"
+      rpy="3.14159265358979 0.785398163397443 0" />
+    <parent
+      link="rl_leg_link" />
+    <child
+      link="rl_wheel_link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+</robot>

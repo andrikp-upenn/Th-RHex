@@ -1,17 +1,26 @@
+import os
+from ament_index_python.packages import get_package_share_directory
+
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
+from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription,
+                            TimerAction)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
-from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    package_name = "th_rhex_description"
-    default_model = PathJoinSubstitution(
-        [FindPackageShare(package_name), "urdf", "th_rhex.urdf.xacro"]
-    )
+    package_name = "th_rhex_description_6leg"
+    pkg_share = get_package_share_directory(package_name)
+
+    # Resolve package:// → file:// (meshes) and $(find ...) → abs path (controllers.yaml)
+    urdf_path = os.path.join(pkg_share, "urdf", "6leg_Th_Rhex_v1.urdf")
+    with open(urdf_path, "r") as f:
+        robot_description = f.read() \
+            .replace(f"package://{package_name}", f"file://{pkg_share}") \
+            .replace(f"$(find {package_name})", pkg_share)
+
     default_world = PathJoinSubstitution(
         [FindPackageShare(package_name), "worlds", "minimal_world.sdf"]
     )
@@ -19,22 +28,10 @@ def generate_launch_description():
         [FindPackageShare("ros_gz_sim"), "launch", "gz_sim.launch.py"]
     )
 
-    model = LaunchConfiguration("model")
     world = LaunchConfiguration("world")
-
-    # Robot description from xacro
-    robot_description = ParameterValue(
-        Command(["xacro", " ", model]),
-        value_type=str
-    )
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument(
-                "model",
-                default_value=default_model,
-                description="Absolute path to a URDF or Xacro file.",
-            ),
             DeclareLaunchArgument(
                 "world",
                 default_value=default_world,
@@ -47,15 +44,26 @@ def generate_launch_description():
                 launch_arguments={"gz_args": ["-r ", world]}.items(),
             ),
 
-            # 2. Robot state publisher - broadcasts TF transforms
+            # 2. Bridge Gazebo /clock → ROS2 /clock
             Node(
-                package="robot_state_publisher",
-                executable="robot_state_publisher",
-                parameters=[{robot_description: robot_description}],
+                package="ros_gz_bridge",
+                executable="parameter_bridge",
+                arguments=["/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock"],
                 output="screen",
             ),
 
-            # 3. Spawn robot into Gazebo
+            # 3. Robot state publisher - broadcasts TF transforms
+            Node(
+                package="robot_state_publisher",
+                executable="robot_state_publisher",
+                parameters=[
+                    {"robot_description": robot_description},
+                    {"use_sim_time": True},
+                ],
+                output="screen",
+            ),
+
+            # 4. Spawn robot into Gazebo
             Node(
                 package="ros_gz_sim",
                 executable="create",
@@ -70,9 +78,9 @@ def generate_launch_description():
                 output="screen",
             ),
 
-            # 4. Spawn joint_state_broadcaster after short delay
+            # 5. Spawn joint_state_broadcaster after short delay
             TimerAction(
-                period=3.0, #seconds
+                period=3.0,
                 actions=[
                     Node(
                         package="controller_manager",
@@ -83,9 +91,9 @@ def generate_launch_description():
                 ]
             ),
 
-            # 5. Spawn leg velocity controller after joint_state_broadcaster
+            # 6. Spawn leg velocity controller after joint_state_broadcaster
             TimerAction(
-                period=4.0, #seconds
+                period=4.0,
                 actions=[
                     Node(
                         package="controller_manager",

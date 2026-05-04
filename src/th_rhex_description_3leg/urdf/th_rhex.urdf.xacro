@@ -2,8 +2,7 @@
 <!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
-<robot
-  name="th_rhex">
+<robot name="th_rhex">
 
   <!-- Gazebo ros2_control plugin -->
   <gazebo>
@@ -13,38 +12,30 @@
     </plugin>
   </gazebo>
 
-  <!--ros2_control hardware interface-->
   <ros2_control name="GazeboSystem" type="system">
     <hardware>
       <plugin>gz_ros2_control/GazeboSimSystem</plugin>
     </hardware>
 
-    <!-- Acutated leg joint - velocity commanded-->
     <joint name="fr_leg_joint">
       <command_interface name="velocity"/>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
-
-
     <joint name="ml_leg_joint">
       <command_interface name="velocity"/>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
-
     <joint name="rr_leg_joint">
       <command_interface name="velocity"/>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
-
-    <!-- Passive wheel joints - state only-->
     <joint name="fr_wheel_joint">
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
-    
     <joint name="ml_wheel_joint">
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -255,19 +246,17 @@
       </geometry>
     </collision>
   </link>
-  <joint
-    name="ml_leg_joint"
-    type="continuous">
-    <origin
-      xyz="2.3837470348731E-05 0.120249997292873 -0.016177780946989"
-      rpy="1.5707963267949 1.5707963267949 0" />
-    <parent
-      link="base_link" />
-    <child
-      link="ml_leg_link" />
-    <axis
-      xyz="0 0 -1" />
-  </joint>
+  
+<!-- ml_leg_joint — keep current RPY, fix axis -->
+<joint name="ml_leg_joint" type="continuous">
+  <origin
+    xyz="2.3837470348731E-05 0.120249997292873 -0.016177780946989"
+    rpy="-1.5707963267949 1.25162281280328 -3.14159265358979"/>
+  <parent link="base_link"/>
+  <child link="ml_leg_link"/>
+  <axis xyz="-0.307748 0.915594 0.258804"/>
+</joint>
+
   <link
     name="ml_wheel_link">
     <inertial>
@@ -313,7 +302,7 @@
     type="continuous">
     <origin
       xyz="0.0579914102340645 0.0191645608875115 0"
-      rpy="1.8899702911568 1.5707963267949 0" />
+      rpy="-1.5707963267949 0 0.319173513991623" />
     <parent
       link="ml_leg_link" />
     <child
@@ -361,19 +350,16 @@
       </geometry>
     </collision>
   </link>
-  <joint
-    name="rr_leg_joint"
-    type="continuous">
-    <origin
-      xyz="-0.102853319292588 -0.0812499972928725 -0.0162297985657852"
-      rpy="1.5707963267949 1.5707963267949 0" />
-    <parent
-      link="base_link" />
-    <child
-      link="rr_leg_link" />
-    <axis
-      xyz="0 0 -1" />
-  </joint>
+<!-- rr_leg_joint — keep current RPY, fix axis -->
+<joint name="rr_leg_joint" type="continuous">
+  <origin
+    xyz="-0.102853319292588 -0.0812499972928725 -0.0162297985657852"
+    rpy="1.5707963267949 1.5707963267949 0"/>
+  <parent link="base_link"/>
+  <child link="rr_leg_link"/>
+  <axis xyz="-0.004909 -0.258828 -0.965911"/>
+</joint>
+
   <link
     name="rr_wheel_link">
     <inertial>
